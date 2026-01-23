@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semester Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #fef3c7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 390px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    h2 { text-align: center; margin-bottom: 10px; }
+    .module {
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+    }
+    .grade {
+      font-size: 13px;
+      margin-top: 4px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin: 3px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .result {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Semester Average</h2>
+
+    <div class="module">
+      <b>Analyse 3 (coef 3)</b>
+      <input id="a3_exam" placeholder="Exam" type="number">
+      <input id="a3_td" placeholder="TD" type="number">
+      <div class="grade" id="g_a3"></div>
+    </div>
+
+    <div class="module">
+      <b>Analyse Numérique (coef 3)</b>
+      <input id="an_exam" placeholder="Exam" type="number">
+      <input id="an_td" placeholder="TD" type="number">
+      <input id="an_tp" placeholder="TP" type="number">
+      <div class="grade" id="g_an"></div>
+    </div>
+
+    <div class="module">
+      <b>Ondes et Vibrations (coef 3)</b>
+      <input id="ov_exam" placeholder="Exam" type="number">
+      <input id="ov_td" placeholder="TD" type="number">
+      <input id="ov_tp" placeholder="TP" type="number">
+      <div class="grade" id="g_ov"></div>
+    </div>
+
+    <div class="module">
+      <b>Electronics (coef 3)</b>
+      <input id="el_exam" placeholder="Exam" type="number">
+      <input id="el_td" placeholder="TD" type="number">
+      <input id="el_tp" placeholder="TP" type="number">
+      <div class="grade" id="g_el"></div>
+    </div>
+
+    <div class="module">
+      <b>Mécanique Rationnelle (coef 2)</b>
+      <input id="mr_exam" placeholder="Exam" type="number">
+      <input id="mr_td" placeholder="TD" type="number">
+      <div class="grade" id="g_mr"></div>
+    </div>
+
+    <div class="module">
+      <b>Python (coef 2)</b>
+      <input id="py_exam" placeholder="Exam" type="number">
+      <input id="py_td" placeholder="TD" type="number">
+      <div class="grade" id="g_py"></div>
+    </div>
+
+    <div class="module">
+      <b>Dessin (coef 1)</b>
+      <input id="de_exam" placeholder="Exam" type="number">
+      <div class="grade" id="g_de"></div>
+    </div>
+
+    <div class="module">
+      <b>Energie (coef 1)</b>
+      <input id="en_exam" placeholder="Exam" type="number">
+      <div class="grade" id="g_en"></div>
+    </div>
+
+    <div class="module">
+      <b>Matériaux (coef 1)</b>
+      <input id="ma_exam" placeholder="Exam" type="number">
+      <div class="grade" id="g_ma"></div>
+    </div>
+
+    <button onclick="calculate()">Calculate Semester</button>
+    <div class="result" id="result"></div>
+
+    <p style="text-align:center; font-size:13px; margin-top:10px;">
+      ben aziz (© 2026)
+    </p>
+  </div>
+
+  <script>
+    function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+    function show(id,val){
+      const el=document.getElementById(id);
+      el.innerText='Subject Grade: '+val.toFixed(2);
+      el.style.color=val>=10?'#16a34a':'#dc2626';
+    }
+
+    function calculate(){
+      let total=0, coef=0;
+
+      let a3=.6*v('a3_exam')+.4*v('a3_td'); show('g_a3',a3); total+=3*a3; coef+=3;
+      let an=.6*v('an_exam')+.2*v('an_td')+.2*v('an_tp'); show('g_an',an); total+=3*an; coef+=3;
+      let ov=.6*v('ov_exam')+.2*v('ov_td')+.2*v('ov_tp'); show('g_ov',ov); total+=3*ov; coef+=3;
+      let el=.6*v('el_exam')+.2*v('el_td')+.2*v('el_tp'); show('g_el',el); total+=3*el; coef+=3;
+      let mr=.6*v('mr_exam')+.4*v('mr_td'); show('g_mr',mr); total+=2*mr; coef+=2;
+      let py=.6*v('py_exam')+.4*v('py_td'); show('g_py',py); total+=2*py; coef+=2;
+      let de=v('de_exam'); show('g_de',de); total+=de; coef++;
+      let en=v('en_exam'); show('g_en',en); total+=en; coef++;
+      let ma=v('ma_exam'); show('g_ma',ma); total+=ma; coef++;
+
+      const avg=(coef?total/coef:0).toFixed(2);
+      const r=document.getElementById('result');
+      r.innerText='Semester Average = '+avg;
+      r.style.color=avg>=10?'#16a34a':'#dc2626';
+    }
+
+    // auto-calculate on any input
+    document.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', calculate);
+    });
+
+    // initial
+    calculate();
+  </script>
+</body>
+</html>
