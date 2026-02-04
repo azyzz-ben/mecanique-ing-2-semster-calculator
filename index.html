@@ -5,25 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Semester Calculator</title>
   <style>
+    :root{
+      --bg1:#dbeafe;
+      --bg2:#fef3c7;
+      --card:#ffffff;
+      --text:#111827;
+      --border:#ddd;
+    }
+    body.dark{
+      --bg1:#0f172a;
+      --bg2:#020617;
+      --card:#020617;
+      --text:#e5e7eb;
+      --border:#334155;
+    }
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(120deg, #dbeafe, #fef3c7);
+      background: linear-gradient(120deg, var(--bg1), var(--bg2));
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      color: var(--text);
+      transition: background .4s, color .4s;
     }
     .box {
-      background: #ffffff;
+      background: var(--card);
       padding: 20px;
       border-radius: 12px;
-      width: 390px;
+      width: 100%;
+      max-width: 390px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      transition: background .4s;
     }
     h2 { text-align: center; margin-bottom: 10px; }
     .module {
       margin-bottom: 12px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
     }
     .grade {
@@ -36,8 +54,11 @@
       padding: 6px;
       margin: 3px 0;
       border-radius: 6px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
     }
+    input::placeholder{color:#94a3b8}
     button {
       width: 100%;
       padding: 10px;
@@ -55,11 +76,25 @@
       font-weight: bold;
       font-size: 20px;
     }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .toggle{
+      cursor:pointer;
+      font-size:13px;
+      opacity:.8;
+    }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>Semester Average</h2>
+    <div class="top">
+      <h2>Semester Average</h2>
+      <span class="toggle" onclick="toggleDark()">🌙 Dark</span>
+    </div>
 
     <div class="module">
       <b>Analyse 3 (coef 3)</b>
@@ -166,6 +201,10 @@
 
     // initial
     calculate();
+
+    function toggleDark(){
+      document.body.classList.toggle('dark');
+    }
   </script>
 </body>
 </html>
