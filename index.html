@@ -11,6 +11,9 @@
       --card:#ffffff;
       --text:#111827;
       --border:#ddd;
+      --primary:#2563eb;
+      --tab-inactive:#cbd5e1;
+      --tab-text-inactive:#475569;
     }
     body.dark{
       --bg1:#0f172a;
@@ -18,6 +21,8 @@
       --card:#020617;
       --text:#e5e7eb;
       --border:#334155;
+      --tab-inactive:#334155;
+      --tab-text-inactive:#94a3b8;
     }
     body {
       font-family: Arial, sans-serif;
@@ -28,6 +33,9 @@
       min-height: 100vh;
       color: var(--text);
       transition: background .4s, color .4s;
+      margin: 0;
+      padding: 20px 0;
+      box-sizing: border-box;
     }
     .box {
       background: var(--card);
@@ -38,7 +46,37 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       transition: background .4s;
     }
-    h2 { text-align: center; margin-bottom: 10px; }
+    h2 { text-align: center; margin-bottom: 10px; margin-top: 5px; }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .3s, color .3s;
+      background: var(--tab-inactive);
+      color: var(--tab-text-inactive);
+    }
+    .tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .semester-content {
+      display: none;
+    }
+    .semester-content.active {
+      display: block;
+    }
+
     .module {
       margin-bottom: 12px;
       border-bottom: 1px solid var(--border);
@@ -49,6 +87,11 @@
       margin-top: 4px;
       font-weight: bold;
     }
+    .elim-warning {
+      color: #b91c1c;
+      font-weight: 800;
+      margin-left: 6px;
+    }
     input {
       width: 100%;
       padding: 6px;
@@ -57,13 +100,14 @@
       border: 1px solid var(--border);
       background: transparent;
       color: var(--text);
+      box-sizing: border-box;
     }
     input::placeholder{color:#94a3b8}
     button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      background: #2563eb;
+      background: var(--primary);
       color: white;
       border: none;
       border-radius: 8px;
@@ -80,12 +124,13 @@
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:8px;
+      margin-bottom:12px;
     }
     .toggle{
       cursor:pointer;
       font-size:13px;
       opacity:.8;
+      user-select: none;
     }
   </style>
 </head>
@@ -96,111 +141,231 @@
       <span class="toggle" onclick="toggleDark()">🌙 Dark</span>
     </div>
 
-    <div class="module">
-      <b>Analyse 3 (coef 3)</b>
-      <input id="a3_exam" placeholder="Exam" type="number">
-      <input id="a3_td" placeholder="TD" type="number">
-      <div class="grade" id="g_a3"></div>
+    <div class="tabs">
+      <div class="tab active" id="tab3" onclick="switchSemester(3)">Semester 3</div>
+      <div class="tab" id="tab4" onclick="switchSemester(4)">Semester 4</div>
     </div>
 
-    <div class="module">
-      <b>Analyse Numérique (coef 3)</b>
-      <input id="an_exam" placeholder="Exam" type="number">
-      <input id="an_td" placeholder="TD" type="number">
-      <input id="an_tp" placeholder="TP" type="number">
-      <div class="grade" id="g_an"></div>
+    <div id="sem3_content" class="semester-content active">
+      <div class="module" id="m_a3">
+        <b>Analyse 3 (coef 3)</b>
+        <input id="a3_exam" placeholder="Exam" type="number">
+        <input id="a3_td" placeholder="TD" type="number">
+        <div class="grade" id="g_a3"></div>
+      </div>
+
+      <div class="module" id="m_an">
+        <b>Analyse Numérique (coef 3)</b>
+        <input id="an_exam" placeholder="Exam" type="number">
+        <input id="an_td" placeholder="TD" type="number">
+        <input id="an_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_an"></div>
+      </div>
+
+      <div class="module" id="m_ov">
+        <b>Ondes et Vibrations (coef 3)</b>
+        <input id="ov_exam" placeholder="Exam" type="number">
+        <input id="ov_td" placeholder="TD" type="number">
+        <input id="ov_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_ov"></div>
+      </div>
+
+      <div class="module" id="m_el">
+        <b>Electronics (coef 3)</b>
+        <input id="el_exam" placeholder="Exam" type="number">
+        <input id="el_td" placeholder="TD" type="number">
+        <input id="el_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_el"></div>
+      </div>
+
+      <div class="module" id="m_mr">
+        <b>Mécanique Rationnelle (coef 2)</b>
+        <input id="mr_exam" placeholder="Exam" type="number">
+        <input id="mr_td" placeholder="TD" type="number">
+        <div class="grade" id="g_mr"></div>
+      </div>
+
+      <div class="module" id="m_py">
+        <b>Python (coef 2)</b>
+        <input id="py_exam" placeholder="Exam" type="number">
+        <input id="py_td" placeholder="TD" type="number">
+        <div class="grade" id="g_py"></div>
+      </div>
+
+      <div class="module" id="m_de">
+        <b>Dessin (coef 1)</b>
+        <input id="de_exam" placeholder="Exam" type="number">
+        <div class="grade" id="g_de"></div>
+      </div>
+
+      <div class="module" id="m_en">
+        <b>Energie (coef 1)</b>
+        <input id="en_exam" placeholder="Exam" type="number">
+        <div class="grade" id="g_en"></div>
+      </div>
+
+      <div class="module" id="m_ma">
+        <b>Matériaux (coef 1)</b>
+        <input id="ma_exam" placeholder="Exam" type="number">
+        <div class="grade" id="g_ma"></div>
+      </div>
     </div>
 
-    <div class="module">
-      <b>Ondes et Vibrations (coef 3)</b>
-      <input id="ov_exam" placeholder="Exam" type="number">
-      <input id="ov_td" placeholder="TD" type="number">
-      <input id="ov_tp" placeholder="TP" type="number">
-      <div class="grade" id="g_ov"></div>
+    <div id="sem4_content" class="semester-content">
+      <div class="module" id="m_mdf">
+        <b>MDF (coef 3)</b>
+        <input id="mdf_exam" placeholder="Exam" type="number">
+        <input id="mdf_td" placeholder="TD" type="number">
+        <input id="mdf_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_mdf"></div>
+      </div>
+
+      <div class="module" id="m_rdm">
+        <b>RDM (coef 2)</b>
+        <input id="rdm_exam" placeholder="Exam" type="number">
+        <input id="rdm_td" placeholder="TD" type="number">
+        <div class="grade" id="g_rdm"></div>
+      </div>
+
+      <div class="module" id="m_mat">
+        <b>Matériaux (coef 2)</b>
+        <input id="mat_exam" placeholder="Exam" type="number">
+        <input id="mat_td" placeholder="TD" type="number">
+        <div class="grade" id="g_mat"></div>
+      </div>
+
+      <div class="module" id="m_sm">
+        <b>Structures métalliques (coef 2)</b>
+        <input id="sm_exam" placeholder="Exam" type="number">
+        <input id="sm_td" placeholder="TD" type="number">
+        <div class="grade" id="g_sm"></div>
+      </div>
+
+      <div class="module" id="m_cm">
+        <b>Construction mécanique (coef 2)</b>
+        <input id="cm_exam" placeholder="Exam" type="number">
+        <input id="cm_td" placeholder="TD" type="number">
+        <div class="grade" id="g_cm"></div>
+      </div>
+
+      <div class="module" id="m_an2">
+        <b>Analyse numérique 2 (coef 2)</b>
+        <input id="an2_exam" placeholder="Exam" type="number">
+        <input id="an2_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_an2"></div>
+      </div>
+
+      <div class="module" id="m_mm">
+        <b>Mesure et métrologie (coef 2)</b>
+        <input id="mm_exam" placeholder="Exam" type="number">
+        <input id="mm_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_mm"></div>
+      </div>
+
+      <div class="module" id="m_cao">
+        <b>CAO (coef 2)</b>
+        <input id="cao_tp" placeholder="TP" type="number">
+        <div class="grade" id="g_cao"></div>
+      </div>
+
+      <div class="module" id="m_tic">
+        <b>Techniques d’information et de com (coef 2)</b>
+        <input id="tic_exam" placeholder="Exam" type="number">
+        <div class="grade" id="g_tic"></div>
+      </div>
     </div>
 
-    <div class="module">
-      <b>Electronics (coef 3)</b>
-      <input id="el_exam" placeholder="Exam" type="number">
-      <input id="el_td" placeholder="TD" type="number">
-      <input id="el_tp" placeholder="TP" type="number">
-      <div class="grade" id="g_el"></div>
-    </div>
-
-    <div class="module">
-      <b>Mécanique Rationnelle (coef 2)</b>
-      <input id="mr_exam" placeholder="Exam" type="number">
-      <input id="mr_td" placeholder="TD" type="number">
-      <div class="grade" id="g_mr"></div>
-    </div>
-
-    <div class="module">
-      <b>Python (coef 2)</b>
-      <input id="py_exam" placeholder="Exam" type="number">
-      <input id="py_td" placeholder="TD" type="number">
-      <div class="grade" id="g_py"></div>
-    </div>
-
-    <div class="module">
-      <b>Dessin (coef 1)</b>
-      <input id="de_exam" placeholder="Exam" type="number">
-      <div class="grade" id="g_de"></div>
-    </div>
-
-    <div class="module">
-      <b>Energie (coef 1)</b>
-      <input id="en_exam" placeholder="Exam" type="number">
-      <div class="grade" id="g_en"></div>
-    </div>
-
-    <div class="module">
-      <b>Matériaux (coef 1)</b>
-      <input id="ma_exam" placeholder="Exam" type="number">
-      <div class="grade" id="g_ma"></div>
-    </div>
-
-    <button onclick="calculate()">Calculate Semester</button>
+    <button onclick="calculateAll()">Calculate Semester</button>
     <div class="result" id="result"></div>
 
-    <p style="text-align:center; font-size:13px; margin-top:10px;">
+    <p style="text-align:center; font-size:13px; margin-top:15px; margin-bottom: 0;">
       ben aziz (© 2026)
     </p>
   </div>
 
   <script>
+    let currentSemester = 3;
+
     function v(id){ return parseFloat(document.getElementById(id).value)||0; }
-    function show(id,val){
-      const el=document.getElementById(id);
-      el.innerText='Subject Grade: '+val.toFixed(2);
-      el.style.color=val>=10?'#16a34a':'#dc2626';
+    
+    // Checks if all inputs within a parent module block are completely filled out
+    function isModuleFilled(moduleId) {
+      const inputs = document.querySelectorAll(`#${moduleId} input`);
+      for (let input of inputs) {
+        if (input.value.trim() === "") {
+          return false;
+        }
+      }
+      return true;
     }
 
-    function calculate(){
-      let total=0, coef=0;
+    function show(gradeId, moduleId, val){
+      const el=document.getElementById(gradeId);
+      let html = 'Subject Grade: ' + val.toFixed(2);
+      
+      // Warning displays only if all inputs are complete AND average score is under 5
+      if(val < 5 && isModuleFilled(moduleId)) {
+        html += '<span class="elim-warning">(note éliminatoire)</span>';
+      }
+      
+      el.innerHTML = html;
+      el.style.color = val>=10 ? '#16a34a' : '#dc2626';
+    }
 
-      let a3=.6*v('a3_exam')+.4*v('a3_td'); show('g_a3',a3); total+=3*a3; coef+=3;
-      let an=.6*v('an_exam')+.2*v('an_td')+.2*v('an_tp'); show('g_an',an); total+=3*an; coef+=3;
-      let ov=.6*v('ov_exam')+.2*v('ov_td')+.2*v('ov_tp'); show('g_ov',ov); total+=3*ov; coef+=3;
-      let el=.6*v('el_exam')+.2*v('el_td')+.2*v('el_tp'); show('g_el',el); total+=3*el; coef+=3;
-      let mr=.6*v('mr_exam')+.4*v('mr_td'); show('g_mr',mr); total+=2*mr; coef+=2;
-      let py=.6*v('py_exam')+.4*v('py_td'); show('g_py',py); total+=2*py; coef+=2;
-      let de=v('de_exam'); show('g_de',de); total+=de; coef++;
-      let en=v('en_exam'); show('g_en',en); total+=en; coef++;
-      let ma=v('ma_exam'); show('g_ma',ma); total+=ma; coef++;
+    function calculateAll(){
+      if(currentSemester === 3) {
+        let total=0, coef=0;
+        let a3=.6*v('a3_exam')+.4*v('a3_td'); show('g_a3', 'm_a3', a3); total+=3*a3; coef+=3;
+        let an=.6*v('an_exam')+.2*v('an_td')+.2*v('an_tp'); show('g_an', 'm_an', an); total+=3*an; coef+=3;
+        let ov=.6*v('ov_exam')+.2*v('ov_td')+.2*v('ov_tp'); show('g_ov', 'm_ov', ov); total+=3*ov; coef+=3;
+        let el=.6*v('el_exam')+.2*v('el_td')+.2*v('el_tp'); show('g_el', 'm_el', el); total+=3*el; coef+=3;
+        let mr=.6*v('mr_exam')+.4*v('mr_td'); show('g_mr', 'm_mr', mr); total+=2*mr; coef+=2;
+        let py=.6*v('py_exam')+.4*v('py_td'); show('g_py', 'm_py', py); total+=2*py; coef+=2;
+        let de=v('de_exam'); show('g_de', 'm_de', de); total+=de; coef++;
+        let en=v('en_exam'); show('g_en', 'm_en', en); total+=en; coef++;
+        let ma=v('ma_exam'); show('g_ma', 'm_ma', ma); total+=ma; coef++;
 
+        displayTotal(total, coef);
+      } else {
+        let total=0, coef=0;
+        let mdf=.6*v('mdf_exam')+.2*v('mdf_td')+.2*v('mdf_tp'); show('g_mdf', 'm_mdf', mdf); total+=3*mdf; coef+=3;
+        let rdm=.6*v('rdm_exam')+.4*v('rdm_td'); show('g_rdm', 'm_rdm', rdm); total+=2*rdm; coef+=2;
+        let mat=.6*v('mat_exam')+.4*v('mat_td'); show('g_mat', 'm_mat', mat); total+=2*mat; coef+=2;
+        let sm=.6*v('sm_exam')+.4*v('sm_td'); show('g_sm', 'm_sm', sm); total+=2*sm; coef+=2;
+        let cm=.6*v('cm_exam')+.4*v('cm_td'); show('g_cm', 'm_cm', cm); total+=2*cm; coef+=2;
+        let an2=.6*v('an2_exam')+.4*v('an2_tp'); show('g_an2', 'm_an2', an2); total+=2*an2; coef+=2;
+        let mm=.6*v('mm_exam')+.4*v('mm_tp'); show('g_mm', 'm_mm', mm); total+=2*mm; coef+=2;
+        let cao=v('cao_tp'); show('g_cao', 'm_cao', cao); total+=2*cao; coef+=2;
+        let tic=v('tic_exam'); show('g_tic', 'm_tic', tic); total+=2*tic; coef+=2;
+
+        displayTotal(total, coef);
+      }
+    }
+
+    function displayTotal(total, coef) {
       const avg=(coef?total/coef:0).toFixed(2);
       const r=document.getElementById('result');
       r.innerText='Semester Average = '+avg;
       r.style.color=avg>=10?'#16a34a':'#dc2626';
     }
 
-    // auto-calculate on any input
+    function switchSemester(sem) {
+      currentSemester = sem;
+      
+      document.getElementById('tab3').classList.toggle('active', sem === 3);
+      document.getElementById('tab4').classList.toggle('active', sem === 4);
+      
+      document.getElementById('sem3_content').classList.toggle('active', sem === 3);
+      document.getElementById('sem4_content').classList.toggle('active', sem === 4);
+      
+      calculateAll();
+    }
+
     document.querySelectorAll('input').forEach(inp=>{
-      inp.addEventListener('input', calculate);
+      inp.addEventListener('input', calculateAll);
     });
 
-    // initial
-    calculate();
+    calculateAll();
 
     function toggleDark(){
       document.body.classList.toggle('dark');
